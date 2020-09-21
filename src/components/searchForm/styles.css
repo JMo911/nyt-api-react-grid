@@ -1,0 +1,23 @@
+form {
+    width: 80%;
+    background-color: slategray;
+    border-radius: 0.5em;
+    padding: 1em;
+    border: 2px solid black;
+    margin-top: 1em;
+}
+
+.search-form-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+#submit-button {
+    width: 30%;
+    border: 1px solid black;
+}
