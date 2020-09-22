@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles.css';
 
-export default function Table({ data }: any) {
+export default function Table({ data, updateFilters }: any) {
     const columns = data[0] && Object.keys(data[0]);
     return (
         <div className='table-responsive-sm'>
@@ -10,7 +10,7 @@ export default function Table({ data }: any) {
                     <tr>
                         {
                             columns && columns.map((column, idx) => {
-                                return <th scope="col" key={idx}>{column}</th>
+                                return <th scope="col" key={idx}>{column} <input type='text' onChange={(e) => updateFilters(column, e.target.value)} /></th>
                             })
                         }
                     </tr>
@@ -22,7 +22,7 @@ export default function Table({ data }: any) {
                                 {
                                     columns && columns.map((column, colidx) => {
                                         const newKey = parseInt(idx.toString() + colidx.toString());
-                                        const columnWidth = colidx === 0 ? row[column].toString().length : 50;
+                                        const columnWidth = colidx === 0 ? row[column].toString().length * 2 : 50;
                                         const maxColumnWidth = {maxWidth: columnWidth.toString() + 'px'}
                                         return <td key={newKey} style={maxColumnWidth}>
                                             {row[column]}

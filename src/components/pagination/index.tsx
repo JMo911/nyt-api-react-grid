@@ -22,7 +22,7 @@ export default function Pagination({ totalRows, rowsPerPage, updateCurrentPage, 
             }
             <span>Records per page: </span>
             <select className="custom-select" onChange={(e) => updateRowsPerPage(e.target.value)}>
-                <option selected value="5">5</option>
+                <option defaultValue="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
             </select>
