@@ -25,7 +25,7 @@ function App() {
   const [authorQuery, setAuthorQuery] = useState('');
   const [title, setTitle] = useState('');
   const [titleQuery, setTitleQuery] = useState('');
-  const [filters, setFilters] = useState<any>(initialFilterState);
+  const [filters, setFilters] = useState<any>({});
   const [filteredApiData, setFilteredApiData] = useState([]);
 
   useEffect(() => {
@@ -67,8 +67,17 @@ function App() {
     const executeFilters = (data: any) => {
       const columns = data && data[0] && Object.keys(data[0]);
       const filteredData = data && data.filter((row: any) => 
-        columns.some((column: any) => row[column].toString().toLowerCase().indexOf(filters[column].toString().toLowerCase()) > -1)
-      )
+        // // row['url'].toString().toLowerCase().indexOf(filters['url'].toString().toLowerCase()) > -1 ||
+        // row['publication_dt'] && row['publication_dt'].toString().toLowerCase().indexOf(filters['publication_dt'] && filters['publication_dt'].toString().toLowerCase()) > -1 ||
+        // // row['byline'].toString().toLowerCase().indexOf(filters['byline'].toString().toLowerCase()) > -1 ||
+        // row['book_title'] && row['book_title'].toString().toLowerCase().indexOf(filters['book_title'] && filters['book_title'].toString().toLowerCase()) > -1
+        // // row['book_author'].toString().toLowerCase().indexOf(filters['book_author'].toString().toLowerCase()) > -1 ||
+        // // row['summary'].toString().toLowerCase().indexOf(filters['summary'].toString().toLowerCase()) > -1 ||
+        // // row['uuid'].toString().toLowerCase().indexOf(filters['uuid'].toString().toLowerCase()) > -1 ||
+        // // row['uri'].toString().toLowerCase().indexOf(filters['uri'].toString().toLowerCase()) > -1 ||
+        // // row['isbn13'].toString().toLowerCase().indexOf(filters['isbn13'].toString().toLowerCase()) > -1
+        columns.some((column: any) => row[column] && row[column].toString().toLowerCase().indexOf(filters[column] && filters[column].toString().toLowerCase()) > -1)
+      );
       setFilteredApiData(filteredData);
     }
     executeFilters(apiData);
@@ -100,9 +109,11 @@ function App() {
 
   const updateFilters = (column: string, columnValue: string) => {
     const prevFilters = {...filters}
-    prevFilters[column] = columnValue
+    prevFilters[column] = columnValue.length > 0 ? columnValue : undefined;
     setFilters(prevFilters);
   }
+
+  const filteredRows = filteredApiData && filteredApiData.length;
 
   const totalRows = apiData && apiData.length;
 
@@ -112,10 +123,10 @@ function App() {
       <SearchForm data={apiData} author={author} updateAuthor={updateAuthor} updateAuthorQuery={updateAuthorQuery} title={title} updateTitle={updateTitle} updateTitleQuery={updateTitleQuery} />
 
       {/* DATA TABLE */}
-      <div className='table-ternary'>{paginatedData.length > 0 ? <Table data={paginatedData} updateFilters={updateFilters} /> : 'Please search a valid author and/or title to see books.'}</div> 
+      <div className='table-ternary'>{paginatedData.length > 0 ? <Table data={filteredApiData.length > 0 ? filteredApiData : paginatedData} updateFilters={updateFilters} /> : 'Please search a valid author and/or title to see books.'}</div> 
 
       {/* PAGINATION */}
-      <div>{paginatedData.length > 0 ? <Pagination totalRows={totalRows} rowsPerPage={rowsPerPage} updateCurrentPage={updateCurrentPage} updateRowsPerPage={updateRowsPerPage} />: ''}</div>
+      <div>{paginatedData.length > 0 && filteredApiData.length === 0 ? <Pagination totalRows={totalRows} rowsPerPage={rowsPerPage} updateCurrentPage={updateCurrentPage} updateRowsPerPage={updateRowsPerPage} />: ''}</div>
     </div>
   );
 }
